@@ -1,4 +1,4 @@
-ANSIBLE_INSTALL_VERSION ?= 2.7.10
+ANSIBLE_INSTALL_VERSION ?= 2.8.5
 PATH := $(PWD)/.venv_ansible$(ANSIBLE_INSTALL_VERSION)/bin:$(shell printenv PATH)
 SHELL := env PATH=$(PATH) /bin/bash
 
@@ -37,10 +37,10 @@ clean: destroy
 ## Run 'molecule destroy'
 destroy:
 	@if [ -x .venv_ansible$(ANSIBLE_INSTALL_VERSION)/bin/molecule ]; then \
-		.venv_ansible$(ANSIBLE_INSTALL_VERSION)/bin/molecule destroy; \
+		.venv_ansible$(ANSIBLE_INSTALL_VERSION)/bin/molecule destroy $(SCENARIO_OPT); \
 	elif (which -s molecule); then \
 		echo -e "\033[0;33mWARNING: molecule not found in virtualenv - trying to use molecule in PATH\033[0m"; \
-		molecule destroy; \
+		molecule destroy $(SCENARIO_OPT); \
 	else \
 		echo -e "\033[0;33mWARNING: molecule not found - either remove potential containers manually or run 'make deps' first\033[0m"; \
 	fi
