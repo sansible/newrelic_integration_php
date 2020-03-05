@@ -1,0 +1,31 @@
+---
+
+- name: Install nginx
+  apt:
+    name:
+      - nginx
+
+- name: Remove default site
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+
+- name: Copy nginx vhost
+  template: src=vhost.conf.j2 dest=/etc/nginx/sites-available/vhost.conf mode="u+x,g+x,o+x"
+  notify: Restart NGINX
+
+- name: Enable nginx vhost
+  file:
+    src: /etc/nginx/sites-available/vhost.conf
+    dest: /etc/nginx/sites-enabled/vhost.conf
+    owner: www-data
+    group: www-data
+    state: link
+  notify: Restart NGINX
+
+- name: Copy over phpinfo file
+  copy:
+    src: phpinfo.php
+    dest: /var/www
+    owner: www-data
+    group: www-data

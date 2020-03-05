@@ -21,6 +21,7 @@
   delay: 10
   register: sansible_newrelic_agent_php_apt_key_result
   until: sansible_newrelic_agent_php_apt_key_result is succeeded
+  changed_when: False
 
 - name: Ensures New Relic PHP PGP key is known
   become: yes

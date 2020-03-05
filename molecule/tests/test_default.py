@@ -17,3 +17,13 @@ def test_packages(host):
 def test_config(host):
     php_ini = host.file('/etc/php/7.3/mods-available/newrelic.ini')
     assert 'newrelic.daemon.loglevel = error' in php_ini.content_string
+
+
+def test_extension_loaded_in_cli(host):
+    cmd = host.run('php -m | grep newrelic')
+    assert "newrelic" in cmd.stdout
+
+
+def test_extension_loaded_in_fpm(host):
+    cmd = host.run('curl http://127.0.0.1/phpinfo.php | grep module_newrelic')
+    assert "module_newrelic" in cmd.stdout

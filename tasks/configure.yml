@@ -7,8 +7,11 @@
     mode: 0644
     section: "{{ item.section | default(None) }}"
     option: "{{ item.option }}"
-    value: "{% if item.value == true %}true{% elif item.value == false %}false{% else %}{{ item.value }}{% endif %}"
+    value: "{% if item.value|type_debug=='bool' and item.value  %}true\
+           {% elif item.value|type_debug=='bool' and not item.value %}false\
+           {% else %}{{ item.value }}{% endif %}"
   with_items: "{{ sansible_newrelic_agent_php_ini_config_defaults + sansible_newrelic_agent_php_ini_config }}"
+  register: "sansible_newrelic_agent_config_result"
 
 - name: Configure New Relic PHP agent labels if set
   become: yes
@@ -24,6 +27,7 @@
             {{ tmp_list |join(';') }}\""
   when:
     - 'sansible_newrelic_agent_php_labels | length > 0'
+  register: "sansible_newrelic_agent_labels_result"
 
 - name: Enable New Relic PHP agent
   become: yes
@@ -33,6 +37,15 @@
     state: link
   with_items: "{{ sansible_newrelic_agent_php_ini_paths_links }}"
   when: sansible_newrelic_agent_php_start_on_boot
+  register: "sansible_newrelic_agent_enable_result"
+
+- name: Restart dependent php service(s)
+  command: "{{ sansible_newrelic_agent_php_restart_cmd }}"
+  when: sansible_newrelic_agent_config_result.changed or
+        sansible_newrelic_agent_labels_result.changed or
+        sansible_newrelic_agent_enable_result.changed
+  tags:
+    - skip_ansible_lint
 
 - name: Start New Relic PHP Daemon if start on boot enabled
   become: yes

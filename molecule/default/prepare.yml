@@ -10,11 +10,15 @@
       raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal python-zipstream)
       changed_when: no
 
-    - name: Install apt-transport-https, lsb-release, net-tools
+    - name: Install apt-transport-https, lsb-release, net-tools, curl
       become: yes
       apt:
         name:
           - apt-transport-https
           - lsb-release
           - net-tools
+          - curl
         update_cache: yes
+
+  roles:
+    - newrelic-agent-php-testing-role

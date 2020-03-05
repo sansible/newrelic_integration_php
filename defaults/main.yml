@@ -6,12 +6,13 @@ sansible_newrelic_agent_php_apt_key_id: 548C16BF
 sansible_newrelic_agent_php_apt_repo: "deb http://apt.newrelic.com/debian/ newrelic non-free"
 sansible_newrelic_agent_php_apt_repo_keyserver: http://eu.pool.sks-keyservers.net
 sansible_newrelic_agent_php_display_name: "{{ ansible_hostname }}"
-sansible_newrelic_agent_php_start_on_boot: yes
+sansible_newrelic_agent_php_start_on_boot: true
 sansible_newrelic_agent_php_ini_config: []  # List of hashes: [ { option: some_option, section: some_section, value: some_value } ]
 sansible_newrelic_agent_php_ini_paths_base: /etc/php/7.3/mods-available/newrelic.ini
 sansible_newrelic_agent_php_ini_paths_links:
   - /etc/php/7.3/fpm/conf.d/20-newrelic.ini
   - /etc/php/7.3/cli/conf.d/20-newrelic.ini
+sansible_newrelic_agent_php_restart_cmd: "service php7.3-fpm restart"
 sansible_newrelic_agent_php_labels: {}  # Hash: { key: value, key: value }
 sansible_newrelic_agent_php_license_key: "changeme"
 sansible_newrelic_agent_php_log_level: "error"
