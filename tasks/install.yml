@@ -11,24 +11,16 @@
   register: sansible_newrelic_agent_php_deps_result
   until: sansible_newrelic_agent_php_deps_result is succeeded
 
-- name: Download New Relic PHP PGP key (works with Bionic behind a proxy)
+- name: Ensures New Relic PHP PGP key is known
   become: yes
-  get_url:
-    dest: /usr/local/src/newrelic_php.asc
-    mode: 0644
+  apt_key:
     url: "https://download.newrelic.com/{{ sansible_newrelic_agent_php_apt_key_id }}.gpg"
+    id: "{{ sansible_newrelic_agent_php_apt_key_id }}"
+    state: present
   retries: 2
   delay: 10
   register: sansible_newrelic_agent_php_apt_key_result
   until: sansible_newrelic_agent_php_apt_key_result is succeeded
-  changed_when: False
-
-- name: Ensures New Relic PHP PGP key is known
-  become: yes
-  apt_key:
-    file: /usr/local/src/newrelic_php.asc
-    id: "{{ sansible_newrelic_agent_php_apt_key_id }}"
-    state: present
 
 - name: Add New Relic PHP Repo
   become: yes
